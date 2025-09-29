@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Soccer Impostor</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #1e1e1e;
+      color: white;
+      text-align: center;
+      padding: 50px;
+    }
+    #question {
+      font-size: 24px;
+      margin: 20px 0;
+    }
+    .option {
+      display: block;
+      background: #333;
+      color: white;
+      padding: 10px;
+      margin: 10px auto;
+      width: 200px;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    .option:hover {
+      background: #555;
+    }
+    #result {
+      margin-top: 20px;
+      font-size: 20px;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <h1>⚽ Soccer Impostor ⚽</h1>
+  <p id="question">Cargando pregunta...</p>
+  <div id="options"></div>
+  <p id="result"></p>
+
+  <script>
+    // Lista de jugadores fáciles (ejemplo)
+    const jugadoresFacil = ["Lionel Messi", "Cristiano Ronaldo", "Neymar", "Kylian Mbappé"];
+
+    // Lista de jugadores difíciles (ejemplo, vamos a poner los que me diste después)
+    const jugadoresDificil = ["Alfredo Di Stéfano", "Johan Cruyff", "Franz Beckenbauer", "Lev Yashin"];
+
+    function nuevaPregunta() {
+      const impostorEsFacil = Math.random() > 0.5;
+      let opciones = impostorEsFacil ? [...jugadoresFacil] : [...jugadoresDificil];
+
+      // Agregamos un impostor (jugador de la otra lista)
+      const impostor = impostorEsFacil 
+        ? jugadoresDificil[Math.floor(Math.random() * jugadoresDificil.length)]
+        : jugadoresFacil[Math.floor(Math.random() * jugadoresFacil.length)];
+      
+      opciones.push(impostor);
+      opciones = opciones.sort(() => Math.random() - 0.5); // Mezclar opciones
+
+      document.getElementById("question").textContent = "¿Quién es el impostor?";
+      const contenedor = document.getElementById("options");
+      contenedor.innerHTML = "";
+
+      opciones.forEach(jugador => {
+        const btn = document.createElement("div");
+        btn.className = "option";
+        btn.textContent = jugador;
+        btn.onclick = () => verificarRespuesta(jugador, impostor);
+        contenedor.appendChild(btn);
+      });
+    }
+
+    function verificarRespuesta(eleccion, impostor) {
+      const result = document.getElementById("result");
+      if (eleccion === impostor) {
+        result.textContent = "✅ Correcto, encontraste al impostor!";
+        result.style.color = "lightgreen";
+      } else {
+        result.textContent = "❌ Incorrecto, el impostor era: " + impostor;
+        result.style.color = "red";
+      }
+      setTimeout(nuevaPregunta, 2000); // Pasa a la siguiente pregunta
+    }
+
+    nuevaPregunta();
+  </script>
+</body>
+</html>
